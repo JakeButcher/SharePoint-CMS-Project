@@ -1,13 +1,8 @@
-######################################################################################################################################
-#
-# NOT TESTED YET
-#
-######################################################################################################################################
-
 <#
+.SYNOPSIS
 Installs SQL Server 2019 (latest CU) silently for SharePoint 2019 single-server farm.
 
-DESCRIPTION
+.DESCRIPTION
 Downloads and installs SQL Server 2019 Developer Edition (or Enterprise if you provide media).
 Installs Database Engine Services, SQL Agent, and Management Tools.
 Sets up SQL with mixed authentication and configures service accounts.
@@ -26,7 +21,7 @@ Comma-separated list of users/groups to grant sysadmin rights.
 Domain account for SQL services (default: LocalSystem).
 
 .EXAMPLE
-.\Install-SQLServer2019.ps1 -SQLSysAdminAccounts "CONTOSO\SPFarmAdmin" -SQLServiceAccount "CONTOSO\SQLService"
+.\Install-SQLServer2019.ps1 -SQLSysAdminAccounts "DOMAIN\SPFarmAdmin" -SQLServiceAccount "DOMAIN\SQLService"
 #>
 
 param(
