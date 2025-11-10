@@ -1,0 +1,1 @@
+New-SPConfigurationDatabase -DatabaseName "SP_Config" -DatabaseServer "SQLVM\Instance" -AdministrationContentDatabaseName "SP_AdminContent" -Passphrase (ConvertTo-SecureString "StrongPassphrase!" -AsPlainText -Force) -FarmCredentials (Get-Credential)

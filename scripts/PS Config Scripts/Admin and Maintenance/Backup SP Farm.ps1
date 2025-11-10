@@ -1,0 +1,1 @@
+Backup-SPFarm -Directory "\\BackupServer\SPBackups" -BackupMethod Full

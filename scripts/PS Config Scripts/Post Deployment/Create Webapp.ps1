@@ -1,0 +1,2 @@
+New-SPWebApplication -Name "FM Blog" -Port 80 -HostHeader "fmblog.corp.local" -URL "http://fmblog.corp.local" -ApplicationPool "FMAppPool" -ApplicationPoolAccount (Get-SPManagedAccount "corp\sp_farm")
+New-SPSite -Url "http://fmblog.corp.local" -OwnerAlias "corp\admin" -Template "STS#0"
