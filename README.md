@@ -1,141 +1,140 @@
-# READ ME
+# SharePoint CMS Automated Deployment
+
 ## Overview
+This project demonstrates the use of **Terraform**, **PowerShell**, and **(future) Python scripts** to automatically deploy Azure infrastructure and configure a SharePoint farm.  
 
+The goal is to standardise, automate, and accelerate SharePoint deployments by using Infrastructure-as-Code (IaC) and scripted configuration. Although the scripts here are boilerplates and variables have been sanitised, they outline a full deployment workflow that can be adapted for different environments.
 
+These automation steps ensure consistent configuration, faster provisioning, and improved adherence to best practices—particularly around SharePoint and administrative account setup.
 
-<details>
-  <summary><strong>Project Directory Structure</strong></summary>
+---
+
+## Project Directory Structure
 
 ```text
 │
 ├── .github
-│   ├── ci.yml
+│ ├── ci.yml
 │
 ├── docs
-│   ├── architecture.md
-│   ├── prerequisites.md
-│   ├── troubleshooting.md
+│ ├── architecture.md
+│ ├── prerequisites.md
+│ ├── troubleshooting.md
 │
 ├── dsc
-│   ├── sharepoint_dsc.ps1
+│ ├── sharepoint_dsc.ps1
 │
 ├── scripts
-│   ├── PS Config Scripts
-│   │   ├── Admin and Maintenance
-│   │   │   ├── Backup SP Farm.ps1
-│   │   │   ├── Check Services.ps1
-│   │   ├── Deployment
-│   │   │   ├── 01 DC Setup.ps1
-│   │   │   ├── 02 Install SQL.ps1
-│   │   │   ├── 03 Install SharePoint Prereqs.ps1
-│   │   │   ├── 04 Install SharePoint.ps1
-│   │   │   ├── Create SP Farm.ps1
-│   │   │   ├── Create Service Apps.ps1
-│   │   │   ├── Start Services.ps1
-│   │   ├── Post Deployment
-│   │   │   ├── Create Webapp.ps1
-│   ├── Provisioning Infra Scripts
-│   │   ├── Terraform
-│   │   │   ├── main.tf
-│   │   │   ├── providers.tf
-│   │   │   ├── terraform.tfvars
-│   │   │   ├── variables.tf
-│   │   ├── Python
+│ ├── PS Config Scripts
+│ │ ├── Admin and Maintenance
+│ │ │ ├── Backup SP Farm.ps1
+│ │ │ ├── Check Services.ps1
+│ │ ├── Deployment
+│ │ │ ├── 01 DC Setup.ps1
+│ │ │ ├── 02 Install SQL.ps1
+│ │ │ ├── 03 Install SharePoint Prereqs.ps1
+│ │ │ ├── 04 Install SharePoint.ps1
+│ │ │ ├── Create SP Farm.ps1
+│ │ │ ├── Create Service Apps.ps1
+│ │ │ ├── Start Services.ps1
+│ │ ├── Post Deployment
+│ │ │ ├── Create Webapp.ps1
+│ ├── Provisioning Infra Scripts
+│ │ ├── Terraform
+│ │ │ ├── main.tf
+│ │ │ ├── providers.tf
+│ │ │ ├── terraform.tfvars
+│ │ │ ├── variables.tf
+│ │ ├── Python (TODO)
 │
-└── README.md  ← General Info
+└── README.md
 ```
-</details>
 
-Describe what the project automates and why.
+---
 
-The purpose is to demonstrate the use of PowerShell, Terraform and Python scripts for automatically deploying infrastructure and SharePoint configurations.
-- All variables have been sanitised
-- Scripts given are simple boilerplates and would need to be reviewed and amended
-- For documentation purposes only
+## Architecture Diagram  
+**TODO:** Add diagram inline (planned).
 
-These scripts help standardise and automate the deployment process of SharePoint farms. By using IaC and PowerShell the speed and consistency of deployments is improved and can be easily reconfigured for different purposes, such as different environments. This specifically helps with SharePoint account configuration as best practise for administrative accounts can be ensured when provisioning software.
-
-
-
-## Architecture Diagram
-
-Todo: Include the diagram inline.
-
-
+---
 
 ## Cloud Provider
+This project deploys infrastructure into **Microsoft Azure**.
 
-This configuration specifically uses Azure.
-
-
+---
 
 ## Components
 
-<details>
-<summary><strong>Terraform:</strong></summary>
-  
-Deployment:
-- Creates Resource Group.
-- Creates Azure VNET.
-    Internal Address space 10.0.0.0/16
-- Creates Azure SubNET.
-- Creates Network Securtiy Group.
-    Allows 3389/RDP with priority 1001
-- Creates Network Interface Card.
-- Creates VM(s)
+### **Terraform**
+**Deployment includes:**
+- Resource Group  
+- Azure Virtual Network
+- Subnet  
+- Network Security Group (allowing RDP/3389 with priority 1001)  
+- Network Interface  
+- Virtual Machine(s)
 
-Variables:
-- variable "resource_group_name".
-- variable "location".
-- variable "admin_username".
-- variable "admin_password".
-</details>
+**Variables used:**
+- `resource_group_name`
+- `location`
+- `admin_username`
+- `admin_password`
 
-<details>
-<summary><strong>PowerShell:</strong></summary>
+---
 
-Deployment:
-- Setup DC Farm with correct minrole and configuration.
-- Install SQL and provision admin accounts.
-- Install SharePoint Prerequisites.
-- Install SharePoint 2019.
-- Create the SharePoint Farm.
-- Create Service Applications.
-- Start SharePoint Services.
+### **PowerShell**
 
-Post Deployment:
-- Create Webapp.
-  
-Admin and Maintenance:
-- Take a full backup of the SharePoint Farm.
-- Check what SharePoint services are currently running.
-</details>
+#### **Deployment**
+- Configure Domain Controller with correct roles
+- Install SQL Server and provision SharePoint admin accounts
+- Install SharePoint prerequisites
+- Install SharePoint 2019
+- Create the SharePoint farm
+- Create required Service Applications
+- Start required SharePoint services
 
-<details>
-<summary><strong>DSC:</strong></summary>
-Todo
-</details>
+#### **Post-Deployment**
+- Create SharePoint Web Application
 
-<details>
-<summary><strong>CI/CD:</strong></summary>
-Todo
-</details>
+#### **Admin & Maintenance**
+- Full farm backup
+- Check current SharePoint service status
 
+---
 
+### **DSC**
+**TODO** – Add configuration enforcement modules.
+
+---
+
+### **CI/CD**
+**TODO** – Document GitHub Actions workflow (`ci.yml`).
+
+---
 
 ## End-to-End Automation Flow
-1. Configure variables.tf
-2. Run Terraform Plan and confirm infrastructure to be deployed.
-3. Run Terraform Apply to begin provisioning in Azure.
-4. Connect to Azure VMs. (Ideally via Azure Bastion, otherwise a public IP will need to be configured)
-5. Run the PowerShell Deployment scripts sequentually. (If provisioning a multiserver farm, run DC, SP and SQL scripts on seperate servers)
-6. Confirm configuration by performing smoke tests.
 
+1. Configure variables in `variables.tf`.
+2. Run **Terraform Plan** and review the output.
+3. Run **Terraform Apply** to provision Azure infrastructure.
+4. Connect to the deployed VMs  
+   - Preferably through **Azure Bastion**  
+   - Otherwise via a public IP (if enabled)
+5. Run the PowerShell deployment scripts sequentially.  
+   - Multi-server farms require scripts to be run on the appropriate DC, SQL, and SharePoint nodes.
+6. Perform smoke tests to validate configuration and ensure farm health.
 
+---
 
 ## Skills Demonstrated
+- **Infrastructure-as-Code (IaC)** using Terraform  
+- **Cloud deployment** on Azure  
+- **Environment provisioning & configuration automation** using PowerShell  
+- **CI/CD practices** using GitHub (pipeline in progress)  
+- **SharePoint 2019 farm deployment and administration**
 
-- Provisioning IaC using Terraform
-- Followijng CI/CD practises using GitHub
-- Provisioning, Configuring and Maintaining environments with PowerShell
+---
 
+## Notes
+- All variables have been sanitised.
+- Scripts are boilerplates and may require modification before real-world use.
+- Python components and architectural assets will be added later.
