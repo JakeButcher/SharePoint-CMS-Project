@@ -8,6 +8,10 @@ The purpose is to demonstrate the use of PowerShell, Terraform and Python script
 
 ## Directory Overview
 
+<details>
+  <summary><strong>Project Directory Structure</strong></summary>
+
+```text
 │
 ├── .github
 │   ├── ci.yml
